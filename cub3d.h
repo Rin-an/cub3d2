@@ -6,18 +6,55 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:21:10 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/01/07 17:16:39 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/01/09 21:07:00 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSING_H
 #define PARSING_H
+# include <mlx.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <math.h>
 # include "get_next_line/get_next_line.h"
 # include <stdbool.h>
+# define TILE_SIZE 32
+# define MAP_NUM_ROWS 11
+# define MAP_NUM_COLS 15
+# define WIN_WIDTH (TILE_SIZE * MAP_NUM_COLS)
+# define WIN_HEIGHT (TILE_SIZE * MAP_NUM_ROWS)
+# define MOVE_SPEED 6.0
+# define ROTATION_ANGLE M_PI / 2
+# define ROTATION_SPEED 2 * (M_PI / 180)
+
+typedef struct s_img
+{
+	void	*mlx_img;
+	char	*addr;
+	int		line_len;
+	int		endian;
+	int		bpp;
+}	t_img;
+
+typedef struct s_player
+{
+	int		x;
+	int		y;
+	int		radius;
+	int		turnDirection;
+	int		walkDirection;
+	double	rotation_angle;
+}	t_player;
+
+typedef struct s_data
+{
+	void	*mlx_ptr;
+	void	*win_ptr;
+	t_img	img;
+	t_player p;
+}	t_data;
 
 char    *ft_strchr(const char *s, int c);
 char    *ft_strrchr(const char *s, int c);

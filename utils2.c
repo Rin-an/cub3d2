@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 00:24:16 by ssadiki           #+#    #+#             */
-/*   Updated: 2021/12/29 21:30:09 by ssadiki          ###   ########.fr       */
+/*   Created: 2023/01/08 15:46:23 by ssadiki           #+#    #+#             */
+/*   Updated: 2023/01/08 15:49:57 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "cub3d.h"
 
 void	ft_bzero(void *s, size_t n)
 {
@@ -22,4 +22,15 @@ void	ft_bzero(void *s, size_t n)
 		while (i < n)
 			((char *)s)[i++] = 0;
 	}
+}
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*p;
+
+	p = malloc(count * size);
+	if (!p)
+		return (NULL);
+	ft_bzero(p, count * size);
+	return (p);
 }

@@ -6,11 +6,11 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 00:47:03 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/01/07 16:49:42 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/01/08 15:48:46 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "cub3d.h"
 
 static void	ft_free(char **a)
 {
