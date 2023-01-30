@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:59:44 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/01/09 21:22:35 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/01/30 21:33:08 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,39 @@ int	keypress(int keycode, t_data *data)
 	if (keycode == 53)
 		exit_keypress(data);
 	else if (keycode == 13 || keycode == 126)
+	{
+	//	data->p.x += -(cos(data->p.rotation_angle) * MOVE_SPEED);
+	//	data->p.y += -(sin(data->p.rotation_angle) * MOVE_SPEED);
 		data->p.walkDirection = 1;
+	}
 	else if (keycode == 1 || keycode == 125)
+	{
+	//	data->p.x += cos(data->p.rotation_angle) * MOVE_SPEED;
+	//	data->p.y += sin(data->p.rotation_angle) * MOVE_SPEED;
 		data->p.walkDirection = -1;
-	else if (keycode == 2 || keycode == 124)
-		data->p.turnDirection = 1;
+	}
 	else if (keycode == 0 || keycode == 123)
+	{
+		data->p.turnDirection = 1;
+		data->p.rotation_angle += data->p.turnDirection * ROTATION_SPEED;
+	}
+	else if (keycode == 2 || keycode == 124)
+	{
 		data->p.turnDirection = -1;
+		data->p.rotation_angle += data->p.turnDirection * ROTATION_SPEED;
+	}
+	/*else if (keycode == 2)
+	{
+		data->p.x += -cos(data->p.rotation_angle) * MOVE_SPEED;
+		data->p.y += (sin(data->p.rotation_angle) * MOVE_SPEED);
+	//	data->p.x += MOVE_SPEED;
+	}
+	else if (keycode == 0)
+	{
+		data->p.x += -(cos(data->p.rotation_angle) * MOVE_SPEED);
+		data->p.y += sin(data->p.rotation_angle) * MOVE_SPEED;
+	//	data->p.x -= MOVE_SPEED;
+	}*/
 	return (0);
 }
 
@@ -115,8 +141,19 @@ void	hooks(t_data *data)
 	mlx_loop(data->mlx_ptr);
 }
 //END OF HOOKS
+int grid[11][15] = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+		{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+		{1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
-void	render_grid(t_data *data, int grid[11][15])
+void	render_grid(t_data *data)
 {
 	for(int i = 0; i < 11; i++)
 	{
@@ -129,52 +166,99 @@ void	render_grid(t_data *data, int grid[11][15])
 					img_pix_put(&(data->img), j2, i2, color);
 			}
 		}
-
 	}
+}
+
+int	is_wall(int x, int y)
+{
+	int	gridindex_x;
+	int	gridindex_y;
+	
+	if (x < 0 || x > WIN_WIDTH || y < 0 || y > WIN_HEIGHT)
+		return (1);
+	gridindex_x = x / 32;
+	gridindex_y = y / 32;
+	if (grid[gridindex_y][gridindex_x] == 1)
+		return (1);
+	return (0);
 }
 
 void	update_player(t_data *data)
 {
-	data->p.rotation_angle += data->p.turnDirection * ROTATION_SPEED;
+	int	move_step;
+	int	new_x;
+	int	new_y;
+
+	move_step = data->p.walkDirection * MOVE_SPEED;
+	new_x = data->p.x + cos(data->p.rotation_angle) * move_step;
+	new_y = data->p.y + sin(data->p.rotation_angle) * move_step;
+	if (!is_wall(new_x, new_y))
+	{
+		data->p.x = new_x;
+		data->p.y = new_y;
+	}
 }
 
 int	render_player(t_data *data)
 {
-	update_player(data);
 	img_pix_put(&data->img, data->p.x, data->p.y, 0xFF0000);
-	printf("%i\n", data->p.turnDirection);
-	for (double i = data->p.y; i < data->p.y + sin(data->p.rotation_angle) * 20; i++)
-	{
-		for (double j = data->p.x; j < data->p.x + cos(data->p.rotation_angle) * 20; j++)
+	float	currentx = data->p.x;
+	float	currenty = data->p.y;
+	float	x1;
+	float	y1;
+	float	dx;
+	float	dy;
+	float	side_length;
+	float	x_inc;
+	float	y_inc;
+	double	ray_angle = data->p.rotation_angle - (FOV / 2);
+
+	//for (int i = 0; i < NUM_RAYS; i++)
+	//{
+		x1 = data->p.x + cos(ray_angle) * 20;
+		y1 = data->p.y + sin(ray_angle) * 20;
+		dx = x1 - data->p.x;
+		dy = y1 - data->p.y;
+		if (fabsf(dx) >= fabsf(dy))
+			side_length = fabsf(dx);
+		else
+			side_length = fabsf(dy);
+		x_inc = dx / side_length;
+		y_inc = dy / side_length;
+		currentx = data->p.x;
+		currenty = data->p.y;
+		for (int j = 0; j <= side_length; j++)
 		{
-			img_pix_put(&data->img, j, i, 0xFF0000);
+			img_pix_put(&data->img, roundf(currentx), roundf(currenty), 0xFF0000);
+			currentx += x_inc;
+			currenty += y_inc;
 		}
-	}
+	//	ray_angle += FOV / NUM_RAYS;
+	//}
+	return (0);
+}
+
+int	draw(t_data *data)
+{
+	if (!data->win_ptr)
+		return (1);
+	update_player(data);
+	render_grid(data);
+	render_player(data);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
+	mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
+	data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
 	return (0);
 }
 
 void	have_fun(t_data *data)
 {
-	int grid[11][15] = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-		{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-		{1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1},
-		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1},
-		{1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1},
-		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-		{1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
-		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
-
-	render_grid(data, grid);
 	data->p.x = WIN_WIDTH / 2;
 	data->p.y = WIN_HEIGHT / 2;
 	data->p.walkDirection = 0;
 	data->p.turnDirection = 0;
 	data->p.rotation_angle = M_PI / 2;
-	mlx_loop_hook(data->mlx_ptr, &render_player, data);;
+	mlx_loop_hook(data->mlx_ptr, &draw, data);
 }
 
 

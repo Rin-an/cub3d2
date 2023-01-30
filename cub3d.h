@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:21:10 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/01/09 21:07:00 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/01/28 19:28:09 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,17 @@
 # include <math.h>
 # include "get_next_line/get_next_line.h"
 # include <stdbool.h>
-# define TILE_SIZE 32
+# define TILE_SIZE 100
 # define MAP_NUM_ROWS 11
 # define MAP_NUM_COLS 15
 # define WIN_WIDTH (TILE_SIZE * MAP_NUM_COLS)
 # define WIN_HEIGHT (TILE_SIZE * MAP_NUM_ROWS)
-# define MOVE_SPEED 6.0
+# define MOVE_SPEED 3.0
 # define ROTATION_ANGLE M_PI / 2
 # define ROTATION_SPEED 2 * (M_PI / 180)
+# define FOV 60 * (M_PI / 180)
+# define WALL_STRIP_WIDTH 1
+# define NUM_RAYS WIN_WIDTH / WALL_STRIP_WIDTH 
 
 typedef struct s_img
 {
