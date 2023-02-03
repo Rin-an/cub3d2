@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:21:10 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/01/28 19:28:09 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/02/03 16:39:23 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@
 # include <math.h>
 # include "get_next_line/get_next_line.h"
 # include <stdbool.h>
-# define TILE_SIZE 100
-# define MAP_NUM_ROWS 11
-# define MAP_NUM_COLS 15
-# define WIN_WIDTH (TILE_SIZE * MAP_NUM_COLS)
-# define WIN_HEIGHT (TILE_SIZE * MAP_NUM_ROWS)
+# define TILE_SIZE 32
+# define MAP_HEIGHT 24
+# define MAP_WIDTH 24
+# define WIN_WIDTH (TILE_SIZE * MAP_WIDTH)
+# define WIN_HEIGHT (TILE_SIZE * MAP_HEIGHT)
 # define MOVE_SPEED 3.0
 # define ROTATION_ANGLE M_PI / 2
 # define ROTATION_SPEED 2 * (M_PI / 180)
@@ -51,12 +51,21 @@ typedef struct s_player
 	double	rotation_angle;
 }	t_player;
 
+typedef struct	s_vec
+{
+	double	dirX;
+	double	dirY;
+	double	planeX;
+	double	planeY;
+}	t_vec;
+
 typedef struct s_data
 {
 	void	*mlx_ptr;
 	void	*win_ptr;
 	t_img	img;
 	t_player p;
+	t_vec	vec;
 }	t_data;
 
 char    *ft_strchr(const char *s, int c);
