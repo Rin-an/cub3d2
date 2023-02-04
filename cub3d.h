@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:21:10 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/02/03 16:39:23 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/02/04 18:26:16 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,14 @@ typedef struct	s_vec
 	double	dirY;
 	double	planeX;
 	double	planeY;
+	double	rayDirX;
+	double	rayDirY;
+	int		mapX;
+	int		mapY;
+	double	sideDistX;
+	double	sideDistY;
+	double	deltaDistX;
+	double	deltaDistY;
 }	t_vec;
 
 typedef struct s_data

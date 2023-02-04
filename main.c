@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:59:44 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/02/03 20:33:33 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/02/04 18:33:42 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,10 +166,100 @@ int map[MAP_WIDTH][MAP_HEIGHT]=
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
+int	get_color(int x, int y)
+{
+	if (map[x][y] == 1)
+		return (0x222222);
+	if (map[x][y] == 2)
+		return (0xFF0000);
+	if (map[x][y] == 3)
+		return (0xFFFF00);
+	if (map[x][y] == 4)
+		return (0x0000FF);
+	if (map[x][y] == 5)
+		return (0);
+	else
+		return (0xFFFFFF);
+}
+
+void    render_map(t_data *data)
+{
+    for(int i = 0; i < MAP_WIDTH; i++)
+    {
+        for(int j = 0; j < MAP_HEIGHT; j++)
+        {
+            int color = get_color(i, j);
+            for (int i2 = i * TILE_SIZE; i2 < (i * TILE_SIZE) + TILE_SIZE; i2++)
+            {
+                for (int j2 = j * TILE_SIZE; j2 < (j * TILE_SIZE) + TILE_SIZE ; j2++)
+                    img_pix_put(&(data->img), j2, i2, color);
+            }
+        }
+    }
+}
+
+void	dda(t_data *data, double rayDirX, double rayDirY)
+{
+	int		stepX;
+	int		stepY;
+	int		hit;
+	int		side;
+
+	hit = 0;
+	data->vec.mapX = (int) data->p.x;
+	data->vec.mapY = (int) data->p.y;
+	if (rayDirX == 0)
+		data->vec.deltaDistX = 1e30;
+	else
+		data->vec.deltaDistX = fabs(1 / rayDirX);
+	if (rayDirY == 0)
+		data->vec.deltaDistY = 1e30;
+	else
+		data->vec.deltaDistY = fabs(1 / rayDirY);
+	if (rayDirX < 0)
+	{
+		stepX = -1;
+		data->vec.sideDistX = (data->p.x - data->vec.mapX ) * data->vec.deltaDistX;
+	}
+	else
+	{
+		stepX = 1;
+		data->vec.sideDistX = (data->vec.mapX + 1.0 - data->p.x) * data->vec.deltaDistX;
+	}
+	if (rayDirY < 0)
+	{
+		stepY = -1;
+		data->vec.sideDistY = (data->p.y - data->vec.mapY ) * data->vec.deltaDistY;
+	}
+	else
+	{
+		stepY = 1;
+		data->vec.sideDistY = (data->vec.mapY + 1.0 - data->p.y) * data->vec.deltaDistY;
+	}
+	while (!hit)
+	{
+		if (data->vec.sideDistX < data->vec.sideDistY)
+		{
+			side = 0;
+			data->vec.sideDistX += data->vec.deltaDistX;
+			data->vec.mapX += stepX;
+		}
+		else
+		{
+			side = 1;
+			data->vec.sideDistY += data->vec.deltaDistY;
+			data->vec.mapY += stepY;
+		}
+		if (map[data->vec.mapX][data->vec.mapY] > 0)
+			hit = 1;
+	}
+}
+
 int	draw(t_data *data)
 {
 	if (!data->win_ptr)
 		return (1);
+	render_map(data);
 	for (int x = 0; x < WIN_WIDTH; x++)
 	{
 		double	cameraX = 2 * x / (double)WIN_WIDTH - 1;
@@ -197,8 +287,6 @@ void	have_fun(t_data *data)
 
 int	main(int argc, char **argv)
 {
-	//	int		i;
-	char	*s;
 	t_data	data;
 
 	if (argc != 2)
@@ -214,28 +302,7 @@ int	main(int argc, char **argv)
 		}
 		else
 			return (printf("Error\nWrong extension!"));
-		int	fd = open(argv[1], O_RDONLY);
-		if (fd < 0)
-			return (printf("Error\nCannot open the file!"));
-		char	**sp;
-		//CHECK IF INDENTIFIER EXIST
-		bool	*exist = ft_calloc(sizeof(bool), 6);
-		//TEXUTRES ARRAY
-		void	*textures = malloc(sizeof(void) * 6);
-		if (!textures)
-			return (printf("Error\nMalloc failed!\n"));
 		init_mlx(&data);
-		s = get_next_line(fd);
-		while (s)
-		{
-			sp = ft_split(s, ' ');
-			if (!sp)
-				return (printf("Error\nSomething went wrong in split!"));
-			if (check_identifiers(sp, exist, textures) == true)
-				return (printf("Error\nWrong or duplicated identifiers!\n"));	
-			free(s);
-			s = get_next_line(fd);
-		}
 		have_fun(&data);
 		hooks(&data);
 		mlx_destroy_window(data.mlx_ptr, data.win_ptr);

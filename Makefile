@@ -5,7 +5,7 @@ SRCS =  main.c utils.c utils2.c ft_split.c get_next_line/get_next_line.c get_nex
 OBJS := $(SRCS:.c=.o)
 
 RM = rm -rf
-FLAGS = -Werror -Wextra -Wall
+FLAGS = -Werror -Wextra -Wall -Wno-unused
 
 $(NAME): $(OBJS) $(HEADERS)
 	gcc $(OBJS) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
