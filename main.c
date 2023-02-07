@@ -6,32 +6,16 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:59:44 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/02/04 18:33:42 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/02/07 21:40:50 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include "get_next_line/get_next_line.h"
 
-//Check for duplicates
-bool	check_identifiers(char **s, bool *exist, void *tex)
+double	vec_dist(double x, double y)
 {
-	(void)tex;
-	if (!ft_strcmp(s[0], "NO\n") && !exist[0])
-		exist[0] = 1;
-	else if (!ft_strcmp(s[0], "SO\n") && !exist[1])
-		exist[1] = 1;
-	else if (!ft_strcmp(s[0], "WE\n") && !exist[2])
-		exist[2] = 1;
-	else if (!ft_strcmp(s[0], "EA\n") && !exist[3])
-		exist[3] = 1;
-	else if (!ft_strcmp(s[0], "F\n") && !exist[4])
-		exist[4] = 1;
-	else if (!ft_strcmp(s[0], "C\n") && !exist[5])
-		exist[5] = 1;
-	else if (ft_strcmp(s[0], "\n"))
-		return (true);
-	return (false);
+	return (sqrt(x*x + y * y));
 }
 
 void	init_mlx(t_data *data)
@@ -182,7 +166,7 @@ int	get_color(int x, int y)
 		return (0xFFFFFF);
 }
 
-void    render_map(t_data *data)
+/*void    render_map(t_data *data)
 {
     for(int i = 0; i < MAP_WIDTH; i++)
     {
@@ -196,27 +180,57 @@ void    render_map(t_data *data)
             }
         }
     }
+}*/
+
+void	render_map(t_data *data, double wallDist, int x)
+{
+	int	wall_height;
+	int	wall_start;
+	int	wall_end;
+	int	color;
+
+	wall_height = (int) (WIN_HEIGHT / wallDist);
+	wall_start = -wall_height / 2 + WIN_HEIGHT / 2;
+	if (wall_start < 0)
+		wall_start = 0;
+	wall_end = wall_height / 2 + WIN_HEIGHT / 2;
+	if (wall_end >= WIN_HEIGHT)
+		wall_end = WIN_HEIGHT - 1;
+	if (map[data->vec.mapX][data->vec.mapY] == 1)
+		color = 0xFF0000;
+	else if (map[data->vec.mapX][data->vec.mapY] == 2)
+		color = 0x00FF00;
+	else if (map[data->vec.mapX][data->vec.mapY] == 3)
+		color = 0x0000FF;
+	else if (map[data->vec.mapX][data->vec.mapY] == 4)
+		color = 0xFFFFFF;
+	else
+		color = 0x000000;
+	if (data->p.side == 1)
+		color /= 2;
+	for (int y = wall_start; y < wall_end; y++)
+		img_pix_put(&data->img, x, y, color);
 }
 
-void	dda(t_data *data, double rayDirX, double rayDirY)
+double	dda(t_data *data, double rayX, double rayY)
 {
 	int		stepX;
 	int		stepY;
 	int		hit;
-	int		side;
+	double	perpWallDist;
 
 	hit = 0;
 	data->vec.mapX = (int) data->p.x;
 	data->vec.mapY = (int) data->p.y;
-	if (rayDirX == 0)
+	if (rayX == 0)
 		data->vec.deltaDistX = 1e30;
 	else
-		data->vec.deltaDistX = fabs(1 / rayDirX);
-	if (rayDirY == 0)
+		data->vec.deltaDistX = fabs(1 / rayX);
+	if (rayY == 0)
 		data->vec.deltaDistY = 1e30;
 	else
-		data->vec.deltaDistY = fabs(1 / rayDirY);
-	if (rayDirX < 0)
+		data->vec.deltaDistY = fabs(1 / rayY);
+	if (rayX < 0)
 	{
 		stepX = -1;
 		data->vec.sideDistX = (data->p.x - data->vec.mapX ) * data->vec.deltaDistX;
@@ -224,9 +238,9 @@ void	dda(t_data *data, double rayDirX, double rayDirY)
 	else
 	{
 		stepX = 1;
-		data->vec.sideDistX = (data->vec.mapX + 1.0 - data->p.x) * data->vec.deltaDistX;
+		data->vec.sideDistX = (data->vec.mapX + vec_dist(data->p.dirX, data->p.dirY) - data->p.x) * data->vec.deltaDistX;
 	}
-	if (rayDirY < 0)
+	if (rayY < 0)
 	{
 		stepY = -1;
 		data->vec.sideDistY = (data->p.y - data->vec.mapY ) * data->vec.deltaDistY;
@@ -234,38 +248,44 @@ void	dda(t_data *data, double rayDirX, double rayDirY)
 	else
 	{
 		stepY = 1;
-		data->vec.sideDistY = (data->vec.mapY + 1.0 - data->p.y) * data->vec.deltaDistY;
+		data->vec.sideDistY = (data->vec.mapY + vec_dist(data->p.dirX, data->p.dirY) - data->p.y) * data->vec.deltaDistY;
 	}
 	while (!hit)
 	{
 		if (data->vec.sideDistX < data->vec.sideDistY)
 		{
-			side = 0;
+			data->p.side = 0;
 			data->vec.sideDistX += data->vec.deltaDistX;
 			data->vec.mapX += stepX;
 		}
 		else
 		{
-			side = 1;
+			data->p.side = 1;
 			data->vec.sideDistY += data->vec.deltaDistY;
 			data->vec.mapY += stepY;
 		}
 		if (map[data->vec.mapX][data->vec.mapY] > 0)
 			hit = 1;
 	}
+	if (data->p.side == 0)
+		perpWallDist = data->vec.sideDistX - data->vec.deltaDistX;
+	else
+		perpWallDist = data->vec.sideDistY - data->vec.deltaDistY;
+	return (perpWallDist);
 }
 
 int	draw(t_data *data)
 {
 	if (!data->win_ptr)
 		return (1);
-	render_map(data);
+	//render_map(data);
 	for (int x = 0; x < WIN_WIDTH; x++)
 	{
 		double	cameraX = 2 * x / (double)WIN_WIDTH - 1;
-		double	rayDirX = data->vec.dirX + data->vec.planeX * cameraX;
-		double	rayDirY = data->vec.dirY + data->vec.planeY * cameraX;
-		printf("%.1f, %.f, %.f\n", cameraX, rayDirX, rayDirY);
+		double	rayX = data->p.dirX + data->vec.planeX * cameraX;
+		double	rayY = data->p.dirY + data->vec.planeY * cameraX;
+		printf("%.1f, %.f, %.f\n", cameraX, rayX, rayY);
+		render_map(data, dda(data, rayX, rayY), x);	
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 	mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
@@ -277,8 +297,8 @@ void	have_fun(t_data *data)
 {
 	data->p.x = 22;
 	data->p.y = 12;
-	data->vec.dirX = -1;
-	data->vec.dirY = 0;
+	data->p.dirX = -1;
+	data->p.dirY = 0;
 	data->vec.planeX = 0;
 	data->vec.planeY = 0.66;
 	mlx_loop_hook(data->mlx_ptr, &draw, data);
@@ -289,19 +309,11 @@ int	main(int argc, char **argv)
 {
 	t_data	data;
 
+	(void)argv;
 	if (argc != 2)
 		printf("Too many or few arguments!\n");
 	else
 	{
-		if (ft_strchr(argv[1], '.') == ft_strrchr(argv[1], '.'))
-		{
-			char	*pt = ft_strchr(argv[1], '.');
-
-			if (!pt || ft_strcmp(pt, ".cub"))
-				return (printf("Error\nWrong extension!"));
-		}
-		else
-			return (printf("Error\nWrong extension!"));
 		init_mlx(&data);
 		have_fun(&data);
 		hooks(&data);
