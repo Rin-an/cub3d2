@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:21:10 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/02/07 21:32:33 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/02/08 18:37:05 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # define MAP_WIDTH 24
 # define WIN_WIDTH (TILE_SIZE * MAP_WIDTH)
 # define WIN_HEIGHT (TILE_SIZE * MAP_HEIGHT)
-# define MOVE_SPEED 3.0
+# define MOVE_SPEED 1.0
 # define ROTATION_ANGLE M_PI / 2
 # define ROTATION_SPEED 2 * (M_PI / 180)
 # define FOV 60 * (M_PI / 180)

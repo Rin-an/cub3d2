@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:59:44 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/02/07 21:40:50 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/02/08 19:22:05 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,33 @@ void	img_pix_put(t_img *img, int x, int y, int color)
 	*(int *)pixel = color;
 }
 
+int	map[MAP_WIDTH][MAP_HEIGHT]=
+{
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
+  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
+  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+};
 //FOR THE SAKE OF MY SANITY
 
 /*
@@ -65,23 +92,40 @@ int	keypress(int keycode, t_data *data)
 {
 	if (keycode == 53)
 		exit_keypress(data);
-	else if (keycode == 13 || keycode == 126)
+	else if (keycode == 13)
 	{
-		data->p.walkDirection = 1;
+		printf("up motion: %i, %i\n",map[(int) (data->p.x + data->p.dirX * MOVE_SPEED)][(int) data->p.y], map[(int) data->p.x][(int) (data->p.y + data->p.dirY * MOVE_SPEED)]);
+	
+		if (map[(int) (data->p.x + data->p.dirX * MOVE_SPEED)][(int) data->p.y] == 0)
+			data->p.x += data->p.dirX * MOVE_SPEED;
+		if (map[(int) data->p.x][(int) (data->p.y + data->p.dirY * MOVE_SPEED)] == 0)
+			data->p.y += data->p.dirY * MOVE_SPEED;
 	}
-	else if (keycode == 1 || keycode == 125)
+	else if (keycode == 1)
 	{
-		data->p.walkDirection = -1;
+		printf("walk down : %i, %i\n",map[(int) (data->p.x - data->p.dirX * MOVE_SPEED)][(int) data->p.y], map[(int) data->p.x][(int) (data->p.y - data->p.dirY * MOVE_SPEED)]);
+		if (map[(int) (data->p.x - data->p.dirX * MOVE_SPEED)][(int) data->p.y] == 0)
+			data->p.x -= data->p.dirX * MOVE_SPEED;
+		if (map[(int) data->p.x][(int) (data->p.y - data->p.dirY * MOVE_SPEED)] == 0)
+			data->p.y -= data->p.dirY * MOVE_SPEED;
 	}
-	else if (keycode == 0 || keycode == 123)
+	else if (keycode == 123)
 	{
-		data->p.turnDirection = 1;
-		data->p.rotation_angle += data->p.turnDirection * ROTATION_SPEED;
+		double	tmpdir = data->p.dirX;
+		double	tmpplane = data->vec.planeX;
+		data->p.dirX = tmpdir * cos(ROTATION_SPEED) - data->p.dirY * sin(ROTATION_SPEED);
+		data->p.dirY = tmpdir * sin(ROTATION_SPEED) + data->p.dirY * cos(ROTATION_SPEED);
+		data->vec.planeX = tmpplane * cos(ROTATION_SPEED) - data->vec.planeY * sin(ROTATION_SPEED);
+		data->vec.planeY = tmpplane * sin(ROTATION_SPEED) + data->vec.planeY * cos(ROTATION_SPEED);
 	}
-	else if (keycode == 2 || keycode == 124)
+	else if (keycode == 124)
 	{
-		data->p.turnDirection = -1;
-		data->p.rotation_angle += data->p.turnDirection * ROTATION_SPEED;
+		double	tmpdir = data->p.dirX;
+		double	tmpplane = data->vec.planeX;
+		data->p.dirX = tmpdir * cos(-ROTATION_SPEED) - data->p.dirY * sin(-ROTATION_SPEED);
+		data->p.dirY = tmpdir * sin(-ROTATION_SPEED) + data->p.dirY * cos(-ROTATION_SPEED);
+		data->vec.planeX = tmpplane * cos(-ROTATION_SPEED) - data->vec.planeY * sin(-ROTATION_SPEED);
+		data->vec.planeY = tmpplane * sin(-ROTATION_SPEED) + data->vec.planeY * cos(-ROTATION_SPEED);
 	}
 	/*else if (keycode == 2)
 	{
@@ -121,34 +165,21 @@ void	hooks(t_data *data)
 	mlx_loop(data->mlx_ptr);
 }
 //END OF HOOKS
-
-int map[MAP_WIDTH][MAP_HEIGHT]=
+void	**load_textures(t_data *data)
 {
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-  {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-};
+	void	**textures;
+	int		img_width;
+	int		img_height;
+
+	textures = malloc(sizeof(void *) * 4);
+	if (!textures)
+		return (NULL);
+	textures[0] = mlx_xpm_file_to_image(data->mlx_ptr, "textures/eagle.xpm", &img_width, &img_height);
+	textures[1] = mlx_xpm_file_to_image(data->mlx_ptr, "textures/purplestone.xpm", &img_width, &img_height);
+	textures[2] = mlx_xpm_file_to_image(data->mlx_ptr, "textures/redbrick.xpm", &img_width, &img_height);
+	textures[3] = mlx_xpm_file_to_image(data->mlx_ptr, "textures/colorstone.xpm", &img_width, &img_height);
+	return (textures);
+}
 
 int	get_color(int x, int y)
 {
@@ -276,15 +307,18 @@ double	dda(t_data *data, double rayX, double rayY)
 
 int	draw(t_data *data)
 {
+	void	**textures;
+
 	if (!data->win_ptr)
 		return (1);
 	//render_map(data);
+	textures = load_textures(data);
 	for (int x = 0; x < WIN_WIDTH; x++)
 	{
 		double	cameraX = 2 * x / (double)WIN_WIDTH - 1;
 		double	rayX = data->p.dirX + data->vec.planeX * cameraX;
 		double	rayY = data->p.dirY + data->vec.planeY * cameraX;
-		printf("%.1f, %.f, %.f\n", cameraX, rayX, rayY);
+	//	printf("%.1f, %.f, %.f\n", cameraX, rayX, rayY);
 		render_map(data, dda(data, rayX, rayY), x);	
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
