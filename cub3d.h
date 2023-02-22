@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:21:10 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/02/08 18:37:05 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/02/22 17:44:15 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define MOVE_SPEED 1.0
 # define ROTATION_ANGLE M_PI / 2
 # define ROTATION_SPEED 2 * (M_PI / 180)
-# define FOV 60 * (M_PI / 180)
+# define FOV 33 * (M_PI / 180)
 # define WALL_STRIP_WIDTH 1
 # define NUM_RAYS WIN_WIDTH / WALL_STRIP_WIDTH 
 
@@ -43,29 +43,28 @@ typedef struct s_img
 
 typedef struct s_player
 {
-	int		x;
-	int		y;
+	double		x;
+	double		y;
 	double	dirX;
 	double	dirY;
-	int		radius;
-	int		turnDirection;
-	int		walkDirection;
-	double	rotation_angle;
+	double	move_speed;
+	double	rotation_speed;
 	int		side; // to add in the dda struct
+	int		direction;
 }	t_player;
 
 typedef struct	s_vec
 {
 	double	planeX;
 	double	planeY;
-	double	rayDirX;
-	double	rayDirY;
+	double	rayX;
+	double	rayY;
 	int		mapX;
 	int		mapY;
 	double	sideDistX;
 	double	sideDistY;
-	double	deltaDistX;
-	double	deltaDistY;
+	double	dx;
+	double	dy;
 }	t_vec;
 
 typedef struct s_data

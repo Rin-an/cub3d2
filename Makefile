@@ -13,7 +13,7 @@ $(NAME): $(OBJS) $(HEADERS)
 #$(NAME_B): $(B_OBJS) $(HEADER_B)
 #	gcc $(B_OBJS) -lmlx -framework OpenGL -framework AppKit -o $(NAME_B)
 
-%.o : %.c
+%.o : %.c $(HEADERS)
 	gcc $(FLAGS) -Imlx -c $< -o $@
 
 
