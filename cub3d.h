@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.h                                          :+:      :+:    :+:   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:21:10 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/02/22 17:44:15 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/02/25 23:24:53 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSING_H
-#define PARSING_H
+#ifndef EXECUTION_H
+# define EXECUTION_H
 # include <mlx.h>
 # include <stdio.h>
 # include <unistd.h>
@@ -32,6 +32,9 @@
 # define WALL_STRIP_WIDTH 1
 # define NUM_RAYS WIN_WIDTH / WALL_STRIP_WIDTH 
 
+/* TO REMOVE */
+int map[MAP_WIDTH][MAP_HEIGHT];
+
 typedef struct s_img
 {
 	void	*mlx_img;
@@ -41,6 +44,14 @@ typedef struct s_img
 	int		bpp;
 }	t_img;
 
+typedef struct s_text
+{
+	int		tex_width;
+	int		tex_height;
+	int		**textures;
+	int		*addr;
+}	t_text;
+
 typedef struct s_player
 {
 	double		x;
@@ -49,7 +60,6 @@ typedef struct s_player
 	double	dirY;
 	double	move_speed;
 	double	rotation_speed;
-	int		side; // to add in the dda struct
 	int		direction;
 }	t_player;
 
@@ -59,13 +69,19 @@ typedef struct	s_vec
 	double	planeY;
 	double	rayX;
 	double	rayY;
+}	t_vec;
+
+typedef struct s_dda
+{
+	int		side;
 	int		mapX;
 	int		mapY;
 	double	sideDistX;
 	double	sideDistY;
 	double	dx;
 	double	dy;
-}	t_vec;
+	double	wallDist;
+}	t_dda;
 
 typedef struct s_data
 {
@@ -74,8 +90,11 @@ typedef struct s_data
 	t_img	img;
 	t_player p;
 	t_vec	vec;
+	t_text	tex;
+	t_dda	dda;
 }	t_data;
 
+void	dda(t_data *data, double rayX, double rayY);
 char    *ft_strchr(const char *s, int c);
 char    *ft_strrchr(const char *s, int c);
 int    ft_strcmp(const char *s1,  const char *s);
@@ -83,4 +102,5 @@ char	**ft_split(const char *s, char c);
 size_t  ft_strlcpy(char *dst, const char *src, size_t dstsize);
 void    *ft_calloc(size_t count, size_t size);
 double	vec_dist(double x, double y);
+
 #endif
