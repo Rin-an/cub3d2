@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:59:44 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/02/25 23:24:52 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/02/25 23:54:11 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ void    init_mlx(t_data *data)
 	if (!data->win_ptr)
 		exit(EXIT_FAILURE);
 	data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
-	data->img.addr = mlx_get_data_addr(data->img.mlx_img, &data->img.bpp,
+	data->img.addr = (int *)mlx_get_data_addr(data->img.mlx_img, &data->img.bpp,
 			&data->img.line_len, &data->img.endian);
 	data->tex.textures = malloc(sizeof(int *) * 4);
 	if (!data->tex.textures)
 		exit(EXIT_FAILURE);
 }
 
-void    img_pix_put(t_img *img, int x, int y, int color)
+/*void    img_pix_put(t_img *img, int x, int y, int color)
 {
 	char    *pixel;
 
@@ -42,7 +42,7 @@ void    img_pix_put(t_img *img, int x, int y, int color)
 			&img->line_len, &img->endian);
 	pixel = img->addr + (img->line_len * y + x * (img->bpp / 8));
 	*(int *)pixel = color;
-}
+}*/
 
 /* W = 87
  * E = 69
@@ -169,13 +169,13 @@ void    hooks(t_data *data)
 
 void    load_textures(t_data *data)
 {
-	data->tex.textures[0] = mlx_xpm_file_to_image(data->mlx_ptr, "textures/eagle.xpm", &data->tex.tex_width, &data->tex.tex_height);
+	data->tex.img.mlx_img = mlx_xpm_file_to_image(data->mlx_ptr, "textures/eagle.xpm", &data->tex.tex_width, &data->tex.tex_height);
 	//data->tex.textures[1] = mlx_xpm_file_to_image(data->mlx_ptr, "textures/purplestone.xpm", &data->tex.tex_width, &data->tex.tex_height);
 	//data->tex.textures[2] = mlx_xpm_file_to_image(data->mlx_ptr, "textures/redbrick.xpm", &data->tex.tex_width, &data->tex.tex_height);
 	//data->tex.textures[3] = mlx_xpm_file_to_image(data->mlx_ptr, "textures/colorstone.xpm", &data->tex.tex_width, &data->tex.tex_height);
 	//data->tex.textures[4] = mlx_xpm_file_to_image(data->mlx_ptr, "textures/barrel.xpm", &data->tex.tex_width, &data->tex.tex_height);
 //	printf("img_width = %i, img_height = %i\n", img_width, img_height);
-	data->tex.addr = (int *)mlx_get_data_addr(data->img.mlx_img, &data->img.bpp, &data->img.line_len, &data->img.endian);
+	data->tex.img.addr = (int *)mlx_get_data_addr(data->tex.img.mlx_img, &data->tex.img.line_len, &data->tex.img.bpp, &data->tex.img.endian);
 }
 
 /*int get_color(int x, int y)
@@ -281,7 +281,7 @@ void	render_map(t_data *data, int x)
 	{
 		texY = (int) texPos & (data->tex.tex_height - 1);
 		texPos += step;
-		color = data->tex.addr[data->tex.tex_height * texY + texX];
+		color = data->tex.img.addr[data->tex.tex_height * texY + texX];
 	//	printf("%i\n", color);
 		if (data->dda.side == 1)
 			color = (color >> 1) & 8355711;
@@ -307,11 +307,12 @@ int draw(t_data *data)
 		render_map(data, x);
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
-	mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
-	data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+/*	mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
+	data->img.mlx_img = mlx_new_image(data->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);*/
 	return (0);
 }
 
+//change player pos to variable
 void    set_dir(t_data *data)
 {
 	if (map[22][12] == 'N')

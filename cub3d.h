@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:21:10 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/02/25 23:24:53 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/02/25 23:33:27 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int map[MAP_WIDTH][MAP_HEIGHT];
 typedef struct s_img
 {
 	void	*mlx_img;
-	char	*addr;
+	int		*addr;
 	int		line_len;
 	int		endian;
 	int		bpp;
@@ -49,7 +49,7 @@ typedef struct s_text
 	int		tex_width;
 	int		tex_height;
 	int		**textures;
-	int		*addr;
+	t_img	img;
 }	t_text;
 
 typedef struct s_player
