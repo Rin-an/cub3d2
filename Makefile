@@ -1,11 +1,11 @@
 NAME = Cub3d
 HEADERS = cub3d.h get_next_line/get_next_line.h
-SRCS =  main.c utils.c utils2.c ft_split.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
-EXECUTION = dda.c
+SRCS =  main.c utils.c 
+EXECUTION = dda.c hooks.c player_movements.c draw.c init_settings.c render_map.c exit.c
 
 OBJS := $(SRCS:.c=.o) $(EXECUTION:.c=.o)
 RM = rm -rf
-FLAGS = -Werror -Wextra -Wall -Wno-unused
+FLAGS = -Werror -Wextra -Wall
 
 $(NAME): $(OBJS) $(HEADERS)
 	gcc $(OBJS) -lmlx -framework OpenGL -framework AppKit -o $(NAME)

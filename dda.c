@@ -6,68 +6,76 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:40:24 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/02/25 15:40:42 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/03/01 02:41:27 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void  dda(t_data *data, double rayX, double rayY)
+void	set_delta(t_data *data)
 {
-    int     stepX;
-    int     stepY;
-    int     hit;
+	if (data->vec.ray_x == 0)
+		data->dda.dx = 1e30;
+	else
+		data->dda.dx = fabs(1 / data->vec.ray_x);
+	if (data->vec.ray_y == 0)
+		data->dda.dy = 1e30;
+	else
+		data->dda.dy = fabs(1 / data->vec.ray_y);
+}
 
-    hit = 0;
-    data->dda.mapX = (int) data->p.x;
-    data->dda.mapY = (int) data->p.y;
-    if (rayX == 0)
-        data->dda.dx = 1e30;
-    else
-        data->dda.dx = fabs(1 / rayX);
-    if (rayY == 0)
-        data->dda.dy = 1e30;
-    else
-        data->dda.dy = fabs(1 / rayY);
-    if (rayX < 0)
-    {
-        stepX = -1;
-        data->dda.sideDistX = (data->p.x - data->dda.mapX ) * data->dda.dx;
-    }
-    else
-    {
-        stepX = 1;
-        data->dda.sideDistX = (data->dda.mapX + 1 - data->p.x) * data->dda.dx;
-    }
-    if (rayY < 0)
-    {
-        stepY = -1;
-        data->dda.sideDistY = (data->p.y - data->dda.mapY ) * data->dda.dy;
-    }
-    else
-    {
-        stepY = 1;
-        data->dda.sideDistY = (data->dda.mapY + 1 - data->p.y) * data->dda.dy;
-    }
-    while (!hit)
-    {
-        if (data->dda.sideDistX < data->dda.sideDistY)
-        {
-            data->dda.side = 0;
-            data->dda.sideDistX += data->dda.dx;
-            data->dda.mapX += stepX;
-        }
-        else
-        {
-            data->dda.side = 1;
-            data->dda.sideDistY += data->dda.dy;
-            data->dda.mapY += stepY;
-        }
-        if (map[data->dda.mapX][data->dda.mapY] > 0)
-            hit = 1;
-    }
-    if (data->dda.side == 0)
-        data->dda.wallDist = data->dda.sideDistX - data->dda.dx;
-    else
-        data->dda.wallDist = data->dda.sideDistY - data->dda.dy;
+void	init_dda(t_data *data)
+{
+	data->dda.map_x = (int) data->p.x;
+	data->dda.map_y = (int) data->p.y;
+	set_delta(data);
+	if (data->vec.ray_x < 0)
+	{
+		data->dda.step_x = -1;
+		data->dda.sidedist_x = (data->p.x - data->dda.map_x) * data->dda.dx;
+	}
+	else
+	{
+		data->dda.step_x = 1;
+		data->dda.sidedist_x = (data->dda.map_x + 1 - data->p.x) * data->dda.dx;
+	}
+	if (data->vec.ray_y < 0)
+	{
+		data->dda.step_y = -1;
+		data->dda.sidedist_y = (data->p.y - data->dda.map_y) * data->dda.dy;
+	}
+	else
+	{
+		data->dda.step_y = 1;
+		data->dda.sidedist_y = (data->dda.map_y + 1 - data->p.y) * data->dda.dy;
+	}
+}
+
+void	dda(t_data *data)
+{
+	int	hit;
+
+	hit = 0;
+	init_dda(data);
+	while (!hit)
+	{
+		if (data->dda.sidedist_x < data->dda.sidedist_y)
+		{
+			data->dda.side = 0;
+			data->dda.sidedist_x += data->dda.dx;
+			data->dda.map_x += data->dda.step_x;
+		}
+		else
+		{
+			data->dda.side = 1;
+			data->dda.sidedist_y += data->dda.dy;
+			data->dda.map_y += data->dda.step_y;
+		}
+		if (map[data->dda.map_x][data->dda.map_y] > 0)
+			hit = 1;
+	}
+	if (data->dda.side == 0)
+		data->dda.walldist = data->dda.sidedist_x - data->dda.dx;
+	else
+		data->dda.walldist = data->dda.sidedist_y - data->dda.dy;
 }

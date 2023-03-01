@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/01 01:34:55 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/03/01 02:45:23 by ssadiki          ###   ########.fr       */
+/*   Created: 2023/02/28 22:37:22 by ssadiki           #+#    #+#             */
+/*   Updated: 2023/02/28 22:37:33 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	img_pix_put(t_img *img, int x, int y, int color)
+void	exit_keypress(t_data *data)
 {
-	char	*pixel;
+	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+	free(data->mlx_ptr);
+	exit(EXIT_SUCCESS);
+}
 
-	img->addr = (int *) mlx_get_data_addr(img->mlx_img, &img->bpp,
-			&img->line_len, &img->endian);
-	pixel = (char *) img->addr + (img->line_len * y + x * (img->bpp / 8));
-	*(int *)pixel = color;
+int	exit_button(t_data *data)
+{
+	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+	free(data->mlx_ptr);
+	exit(EXIT_SUCCESS);
 }

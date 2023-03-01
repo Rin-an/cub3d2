@@ -6,12 +6,12 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 15:21:10 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/02/25 23:33:27 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/03/01 03:09:25 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECUTION_H
-# define EXECUTION_H
+#ifndef CUB3D_H
+# define CUB3D_H
 # include <mlx.h>
 # include <stdio.h>
 # include <unistd.h>
@@ -19,21 +19,13 @@
 # include <fcntl.h>
 # include <math.h>
 # include "get_next_line/get_next_line.h"
-# include <stdbool.h>
-# define TILE_SIZE 32
 # define MAP_HEIGHT 24
 # define MAP_WIDTH 24
-# define WIN_WIDTH (TILE_SIZE * MAP_WIDTH)
-# define WIN_HEIGHT (TILE_SIZE * MAP_HEIGHT)
-# define MOVE_SPEED 1.0
-# define ROTATION_ANGLE M_PI / 2
-# define ROTATION_SPEED 2 * (M_PI / 180)
-# define FOV 33 * (M_PI / 180)
-# define WALL_STRIP_WIDTH 1
-# define NUM_RAYS WIN_WIDTH / WALL_STRIP_WIDTH 
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 1024
 
 /* TO REMOVE */
-int map[MAP_WIDTH][MAP_HEIGHT];
+int	map[MAP_WIDTH][MAP_HEIGHT];
 
 typedef struct s_img
 {
@@ -48,7 +40,14 @@ typedef struct s_text
 {
 	int		tex_width;
 	int		tex_height;
-	int		**textures;
+	int		wall_height;
+	int		wall_start;
+	int		wall_end;
+	int		wallx;
+	int		tex_x;
+	int		tex_y;
+	double	tex_step;
+	double	tex_pos;
 	t_img	img;
 }	t_text;
 
@@ -56,51 +55,93 @@ typedef struct s_player
 {
 	double		x;
 	double		y;
-	double	dirX;
-	double	dirY;
-	double	move_speed;
-	double	rotation_speed;
-	int		direction;
+	double		dir_x;
+	double		dir_y;
+	double		move_speed;
+	double		rotation_speed;
+	int			direction;
 }	t_player;
 
-typedef struct	s_vec
+typedef struct s_vec
 {
-	double	planeX;
-	double	planeY;
-	double	rayX;
-	double	rayY;
+	double	plane_x;
+	double	plane_y;
+	double	ray_x;
+	double	ray_y;
 }	t_vec;
 
 typedef struct s_dda
 {
 	int		side;
-	int		mapX;
-	int		mapY;
-	double	sideDistX;
-	double	sideDistY;
+	int		map_x;
+	int		map_y;
+	double	sidedist_x;
+	double	sidedist_y;
 	double	dx;
 	double	dy;
-	double	wallDist;
+	int		step_x;
+	int		step_y;
+	double	walldist;
 }	t_dda;
+
+typedef struct s_keypress
+{
+	int	right;
+	int	left;
+	int	up;
+	int	down;
+	int	r_right;
+	int	r_left;
+	int	reset;
+}	t_keypress;
 
 typedef struct s_data
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
-	t_img	img;
-	t_player p;
-	t_vec	vec;
-	t_text	tex;
-	t_dda	dda;
+	void		*mlx_ptr;
+	void		*win_ptr;
+	int			x;
+	t_img		img;
+	t_player	p;
+	t_vec		vec;
+	t_text		tex;
+	t_dda		dda;
+	t_keypress	kp;
 }	t_data;
 
-void	dda(t_data *data, double rayX, double rayY);
-char    *ft_strchr(const char *s, int c);
-char    *ft_strrchr(const char *s, int c);
-int    ft_strcmp(const char *s1,  const char *s);
-char	**ft_split(const char *s, char c);
-size_t  ft_strlcpy(char *dst, const char *src, size_t dstsize);
-void    *ft_calloc(size_t count, size_t size);
-double	vec_dist(double x, double y);
+/* EXECUTION */
+/*           */
+//INIT SETTINGS
+void	init_mlx(t_data *data);
+void	init_settings(t_data *data);
+void	set_plane(t_data *data);
+void	set_dir(t_data *data);
+
+//DDA
+void	dda(t_data *data);
+
+//HOOKS
+void	hooks(t_data *data);
+int		keypress(int keycode, t_data *data);
+int		keyrelease(int keycode, t_data *data);
+void	reset_settings(t_data *data);
+int		draw(t_data *data);
+
+//EXIT
+void	exit_keypress(t_data *data);
+int		exit_button(t_data *data);
+
+//PLAYER MOVEMENTS
+void	up_down(t_data *data);
+void	left_right(t_data *data);
+void	rotate(t_data *data, double rotation_speed);
+void	move_player(t_data *data);
+
+//RENDER MAP
+void	render_map(t_data *data, int x);
+void	floor_ceiling(t_data *data);
+void	load_textures(t_data *data);
+
+//UTILS
+void	img_pix_put(t_img *img, int x, int y, int color);
 
 #endif
