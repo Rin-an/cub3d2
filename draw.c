@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 02:15:39 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/03/01 02:51:53 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/03/01 04:07:32 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,8 @@ int	draw(t_data *data)
 	while (x < WIN_WIDTH)
 	{
 		camerax = 2 * x / (double)WIN_WIDTH - 1;
-		data->vec.ray_x = data->p.dir_x + data->vec.plane_x * camerax * \
-			data->p.direction;
-		data->vec.ray_y = data->p.dir_y + data->vec.plane_y * camerax * \
-			data->p.direction;
+		data->vec.ray_x = data->p.dir_x + data->vec.plane_x * camerax;
+		data->vec.ray_y = data->p.dir_y + data->vec.plane_y * camerax;
 		dda(data);
 		load_textures(data);
 		render_map(data, x);

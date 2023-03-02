@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 00:47:03 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/01/08 15:48:46 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/01/27 16:16:11 by nabouzah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ static char	**ft_splitstr(char **a, char const *s, char c)
 char	**ft_split(char const *s, char c)
 {
 	char	**a;
-	size_t	i;
+//	size_t	i;
 
-	i = 0;
+//	i = 0;
 	if (!s)
 		return (NULL);
 	a = malloc(sizeof(char *) * ft_size(s, c));

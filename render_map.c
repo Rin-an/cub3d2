@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 01:36:55 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/03/01 03:32:44 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/03/01 04:43:10 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,19 @@ void	load_textures(t_data *data)
 {
 	if (data->dda.side == 0 && data->dda.step_x == -1)
 		data->tex.img.mlx_img = mlx_xpm_file_to_image(data->mlx_ptr, \
-			"textures/purplestone.xpm", &data->tex.tex_width, \
+			data->north_texture, &data->tex.tex_width, \
 			&data->tex.tex_height);
 	else if (data->dda.side == 0 && data->dda.step_x == 1)
 		data->tex.img.mlx_img = mlx_xpm_file_to_image(data->mlx_ptr, \
-			"textures/redbrick.xpm", &data->tex.tex_width, \
+			data->south_texture, &data->tex.tex_width, \
 			&data->tex.tex_height);
 	else if (data->dda.side == 1 && data->dda.step_y == 1)
 		data->tex.img.mlx_img = mlx_xpm_file_to_image(data->mlx_ptr, \
-			"textures/colorstone.xpm", &data->tex.tex_width, \
+			data->east_texture, &data->tex.tex_width, \
 			&data->tex.tex_height);
 	else if (data->dda.side == 1 && data->dda.step_y == -1)
 		data->tex.img.mlx_img = mlx_xpm_file_to_image(data->mlx_ptr, \
-			"textures/eagle.xpm", &data->tex.tex_width, \
+			data->west_texture, &data->tex.tex_width, \
 			&data->tex.tex_height);
 	data->tex.img.addr = (int *)mlx_get_data_addr(data->tex.img.mlx_img, \
 			&data->tex.img.line_len, &data->tex.img.bpp, &data->tex.img.endian);

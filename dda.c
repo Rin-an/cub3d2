@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/25 15:40:24 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/03/01 02:41:27 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/03/01 16:15:08 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	dda(t_data *data)
 			data->dda.sidedist_y += data->dda.dy;
 			data->dda.map_y += data->dda.step_y;
 		}
-		if (map[data->dda.map_x][data->dda.map_y] > 0)
+		if (data->map[data->dda.map_x][data->dda.map_y] != '0')
 			hit = 1;
 	}
 	if (data->dda.side == 0)

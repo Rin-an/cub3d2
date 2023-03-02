@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 12:12:11 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/03/01 02:48:41 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/03/01 04:46:54 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,12 @@
 
 void	reset_settings(t_data *data)
 {
-	data->p.x = 22;
-	data->p.y = 12;
+	data->p.x = 1;
+	data->p.y = 1;
 	data->p.dir_x = -1;
 	data->p.dir_y = 0;
 	data->vec.plane_y = 0.66;
 	data->vec.plane_x = 0;
-	data->p.direction = 1;
 }
 
 int	keypress(int keycode, t_data *data)
