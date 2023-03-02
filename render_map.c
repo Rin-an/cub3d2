@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 01:36:55 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/03/01 04:43:10 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/03/02 14:22:01 by ssadiki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,22 @@
 
 void	floor_ceiling(t_data *data)
 {
-	int	floor_color;
-	int	ceiling_color;
 	int	y;
 	int	x;
 
 	y = -1;
-	floor_color = 0x223322;
-	ceiling_color = 0x222222;
 	while (++y < WIN_HEIGHT / 2)
 	{
 		x = -1;
 		while (++x < WIN_WIDTH)
-			img_pix_put(&data->img, x, y, ceiling_color);
+			img_pix_put(&data->img, x, y, data->ceiling_color);
 	}
 	y = WIN_HEIGHT / 2;
 	while (y < WIN_HEIGHT)
 	{
 		x = -1;
 		while (++x < WIN_WIDTH)
-			img_pix_put(&data->img, x, y, floor_color);
+			img_pix_put(&data->img, x, y, data->floor_color);
 		y++;
 	}
 }
