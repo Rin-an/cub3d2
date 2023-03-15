@@ -1,10 +1,10 @@
 C 79, 88, 89
 F 33,59,23
 
-EA wood0.xpm          
-NO wood1.xpm
-SO wood2.xpm
-WE wood3.xpm
+EA ./textures/wood0.xpm          
+NO ./textures/wood1.xpm
+SO ./textures/wood2.xpm
+WE ./textures/wood3.xpm
 
 
 11111111111111111111111111111111111111111111111111111111111111111111111111111111

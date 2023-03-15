@@ -6,61 +6,89 @@
 /*   By: fabou-za <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 17:19:51 by fabou-za          #+#    #+#             */
-/*   Updated: 2023/02/28 15:06:20 by fabou-za         ###   ########.fr       */
+/*   Updated: 2023/03/02 23:50:26 by fabou-za         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int to_color(char **str)
+int	to_color(char **str)
 {
-	int i;
-	int color;
-	int tmp;
+	int	i;
+	int	color;
+	int	tmp;
 
 	i = 0;
 	color = 0;
-	while(str[i])
+	while (str[i])
 	{
 		tmp = ft_atoi(str[i]);
-		printf("the number %d\n", tmp);//
 		if (tmp < 0 || tmp > 255)
 			return (-1);
-		color = color | (tmp << (16 - (i++ * 8)));
+		color = color | (tmp << (16 - (i++ *8)));
 	}
 	return (color);
 }
 
-int check_color(char **str)
+int	check_splited(char **s)
 {
-	int len;
-	int i;
+	int	i;
+	int	j;
+	int	len;
+
+	i = 0;
+	while (s[i])
+	{
+		len = ft_strlen2(&s[i]);
+		j = 0;
+		while (s[i][j] == ' ' || s[i][j] == '\t')
+			j++;
+		while (s[i][len] == ' ' || s[i][len] == '\t')
+			len--;
+		while (s[i][j] && j < len)
+		{
+			if (ft_strchr("0123456789", s[i][j++]) == NULL)
+				return (-1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	check_color(char **str)
+{
+	int	len;
+	int	i;
+	int	virgule;
 
 	len = ft_strlen2(str);
 	(*str)[len] = '\0';
+	virgule = 0;
 	i = 0;
 	while ((*str)[i])
 	{
 		if (ft_strchr(" \t,0123456789", (*str)[i++]) == NULL)
 			return (-1);
+		if ((*str)[i] == ',')
+			virgule++;
 	}
-	//printf("finish herei with str '%s' \n", *str);
+	if (virgule != 2)
+		return (-1);
 	return (0);
 }
 
-int color_stock(char c, char *str, t_data *mlx)
+int	color_stock(char c, char *str, t_data *mlx)
 {
-	char **splited;
-	int color;
-	char *s;
+	char	**splited;
+	int		color;
+	char	*s;
 
 	if (check_color(&str) == -1)
 		return (-1);
 	s = ft_strtrim(str, " \t");
-	//printf("now we're here\n");
 	splited = ft_split(s, ',');
 	free(s);
-	if (!splited ||ft_maplen(splited) != 3)
+	if (!splited || ft_maplen(splited) != 3 || check_splited(splited) == -1)
 	{
 		clear_splited(splited);
 		return (-1);
@@ -76,17 +104,16 @@ int color_stock(char c, char *str, t_data *mlx)
 	return (0);
 }
 
-int parse_color(char **splited, char *str, bool *exist, t_data *mlx)
+int	parse_color(char **splited, char *str, bool *exist, t_data *mlx)
 {
-	int i;
-	int status;
+	int	i;
+	int	status;
 
 	i = 0;
 	status = 0;
-	//printf("string color is '%s'\n", str);
 	while (str[i] == ' ')
 		i++;
-	if (!strcmp(splited[0], "F") && !exist[5])
+	if (!ft_strcmp(splited[0], "F") && !exist[5])
 	{
 		exist[5] = 1;
 		if (str[i] && str[i] == 'F')

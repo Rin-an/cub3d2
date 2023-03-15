@@ -6,7 +6,7 @@
 /*   By: ssadiki <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 12:31:42 by ssadiki           #+#    #+#             */
-/*   Updated: 2023/03/01 16:16:37 by ssadiki          ###   ########.fr       */
+/*   Updated: 2023/03/02 22:17:11 by fabou-za         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,20 +38,20 @@ void	left_right(t_data *data)
 {
 	if (data->kp.left == 1)
 	{
-		if (data->map[(int)(data->p.x - data->vec.plane_x * data->p.move_speed)] \
-				[(int)data->p.y] == '0')
+		if (data->map[(int)(data->p.x - data->vec.plane_x * \
+				data->p.move_speed)][(int)data->p.y] == '0')
 			data->p.x -= data->vec.plane_x * data->p.move_speed;
-		if (data->map[(int)data->p.x] \
-				[(int)(data->p.y - data->vec.plane_y * data->p.move_speed)] == '0')
+		if (data->map[(int)data->p.x][(int)(data->p.y - \
+				data->vec.plane_y * data->p.move_speed)] == '0')
 			data->p.y -= data->vec.plane_y * data->p.move_speed;
 	}
 	else if (data->kp.right == 1)
 	{
-		if (data->map[(int)(data->p.x + data->vec.plane_x * data->p.move_speed)] \
-				[(int)data->p.y] == '0')
+		if (data->map[(int)(data->p.x + data->vec.plane_x * \
+				data->p.move_speed)][(int)data->p.y] == '0')
 			data->p.x += data->vec.plane_x * data->p.move_speed;
-		if (data->map[(int)data->p.x] \
-				[(int)(data->p.y + data->vec.plane_y * data->p.move_speed)] == '0')
+		if (data->map[(int)data->p.x][(int)(data->p.y + \
+				data->vec.plane_y * data->p.move_speed)] == '0')
 			data->p.y += data->vec.plane_y * data->p.move_speed;
 	}
 }

@@ -5,8 +5,8 @@ WE textures/purplestone.xpm
 EA textures/redbrick.xpm
 SO textures/eagle.xpm
 
-F 1, 255,   20
-C 5, 130,   50
+C 40, 20, 70
+F 100, 100, 100
 
 11111111111111111111111
 100000000000000000000001

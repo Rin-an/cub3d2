@@ -6,31 +6,16 @@
 /*   By: fabou-za <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 16:28:31 by fabou-za          #+#    #+#             */
-/*   Updated: 2023/02/25 19:09:36 by fabou-za         ###   ########.fr       */
+/*   Updated: 2023/03/02 23:44:57 by fabou-za         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void free_map(char **map)
-{
-	char *temp;
-	int j;
-
-	j = 0;
-	while (map[j])
-	{
-		temp = map[j];
-		map[j] = map[j + 1];
-		free(temp);
-		j++;
-	}
-}
-
 void	free_mlx(t_data *mlx)
 {
-	char *temp;
-	int j;
+	char	*temp;
+	int		j;
 
 	j = 0;
 	while (mlx->lines[j])
@@ -49,18 +34,15 @@ void	free_mlx(t_data *mlx)
 		free(mlx->east_texture);
 	if (mlx->south_texture)
 		free(mlx->south_texture);
-	/*if (mlx->map)
-		free_map(&mlx->map[0]);*/
-
 }
 
 void	clear_splited(char **s)
 {
-	char *temp;
-	int j;
+	char	*temp;
+	int		j;
 
 	j = 0;
-	while(s[j])
+	while (s[j])
 	{
 		temp = s[j];
 		s[j] = s[j + 1];
@@ -72,7 +54,7 @@ void	clear_splited(char **s)
 
 size_t	ft_maplen(char **s)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (s[i])
@@ -80,9 +62,9 @@ size_t	ft_maplen(char **s)
 	return (i);
 }
 
-int ft_strlen2(char **s)
+int	ft_strlen2(char **s)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while ((*s)[i] && (*s)[i] != '\n')
@@ -91,34 +73,10 @@ int ft_strlen2(char **s)
 	return (i);
 }
 
-/*int ft_strlenew2(char *s)
-{
-	size_t i;
-	//char *str;
-
-	i = 0;
-    (*s) = ft_strtrim(*s, " \n");
-	while ((*s)[i])
-		i++;
-	return (i);
-}*/
-
-int ft_strlenew(char **s)
-{
-	size_t i;
-
-	i = 0;
-    (*s) = ft_strtrim(*s, " \n");
-	while ((*s)[i])
-		i++;
-	return (i);
-}
-
-void    display_message_error(int if_error)
+void	display_message_error(int if_error)
 {
 	if (if_error == -1)
-		printf("ERROR\nParse error\n");
+		printf("Error\nParse error\n");
 	else if (if_error == 3)
-		printf("ERROR\nNo map found\n");
+		printf("Error\nNo map found\n");
 }
-
